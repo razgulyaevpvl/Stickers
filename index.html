@@ -2,8 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AR без ошибок WebGL</title>
+  <title>AR sticker</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.querySelector('canvas');
+      if (canvas) canvas.willReadFrequently = true;
+    });
+  </script>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar.min.js"></script>
   <style>
@@ -14,15 +19,11 @@
 <body>
   <a-scene
     embedded
-    arjs="
-      sourceType: webcam;
-      debugUIEnabled: false;
-      trackingMethod: best;
-    "
+    arjs="trackingMethod: best;"
     renderer="antialias: false; logarithmicDepthBuffer: false;"
   >
     <a-marker type="pattern" url="assets/marker.patt">
-      <a-box color="blue" scale="0.5 0.5 0.5"></a-box>
+      <a-box color="red" scale="0.5 0.5 0.5"></a-box>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
