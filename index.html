@@ -2,27 +2,60 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Test</title>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar.min.js"></script>
-  <style>body {margin: 0; overflow: hidden;}</style>
+  <title>AR Test Fixed</title>
+  <!-- Обновлённые версии библиотек -->
+  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.0/dist/aframe-ar.min.js"></script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    a-scene { display: block; width: 100vw; height: 100vh; }
+  </style>
 </head>
 <body>
-  <a-scene embedded arjs='sourceType: webcam; trackingMethod: best;'>
-    <a-marker type="pattern" url="assets/marker.patt">
-      <a-box position="0 0.5 0" material="color: red; opacity: 1;"></a-box>
+  <!-- Упрощённая сцена с правильными параметрами -->
+  <a-scene 
+    embedded 
+    arjs="
+      sourceType: webcam;
+      trackingMethod: best;
+      detectionMode: mono_and_matrix;
+      matrixCodeType: 3x3;
+    "
+    renderer="logarithmicDepthBuffer: true;"
+  >
+    <!-- Используем стандартный маркер Hiro для теста -->
+    <a-marker preset="hiro">
+      <a-box 
+        position="0 0.5 0" 
+        material="color: red; opacity: 1;"
+        shadow
+      ></a-box>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
-  
+
   <script>
-    // Debug info
+    // Улучшенный дебаг
     const scene = document.querySelector('a-scene');
     scene.addEventListener('loaded', () => {
-      console.log('Scene loaded');
+      console.log('Scene loaded successfully');
+      
       const marker = document.querySelector('a-marker');
-      marker.addEventListener('markerFound', () => console.log('Marker found!'));
-      marker.addEventListener('markerLost', () => console.log('Marker lost'));
+      marker.addEventListener('markerFound', () => {
+        console.log('Marker found!');
+        document.body.style.backgroundColor = '#dfd'; // Визуальная индикация
+      });
+      
+      marker.addEventListener('markerLost', () => {
+        console.log('Marker lost');
+        document.body.style.backgroundColor = '#fdd';
+      });
+      
+      // Проверка версий
+      console.log('A-Frame version:', AFRAME.version);
+      if(window.THREEx) {
+        console.log('AR.js version:', THREEx.ArToolkitContext.version);
+      }
     });
   </script>
 </body>
