@@ -2,30 +2,83 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR sticker</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>AR без ошибок</title>
+  
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const canvas = document.querySelector('canvas');
-      if (canvas) canvas.willReadFrequently = true;
+      if(canvas) {
+        canvas.willReadFrequently = true;
+        console.log('Canvas optimization applied');
+      }
     });
   </script>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@master/aframe/build/aframe-ar.min.js"></script>
+  
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.0/aframe/build/aframe-ar.min.js"></script>
+  
   <style>
-    body { margin: 0; overflow: hidden; }
-    a-scene { display: block; width: 100vw; height: 100vh; }
+    body { 
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+    a-scene {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
   </style>
 </head>
 <body>
   <a-scene
     embedded
-    arjs="trackingMethod: best;"
-    renderer="antialias: false; logarithmicDepthBuffer: false;"
+    arjs="
+      sourceType: webcam;
+      trackingMethod: best;
+      detectionMode: mono_and_matrix;
+      matrixCodeType: 3x3;
+      debugUIEnabled: false;
+    "
+    renderer="antialias: true; logarithmicDepthBuffer: true;"
   >
-    <a-marker type="pattern" url="assets/marker.patt">
-      <a-box color="red" scale="0.5 0.5 0.5"></a-box>
+    <!-- Простой маркер для теста -->
+    <a-marker type="pattern" url="assets/marker.patt" emitevents="true">
+      <a-box 
+        position="0 0.5 0" 
+        rotation="0 45 0"
+        color="#4CC3D9"
+        shadow
+      ></a-box>
     </a-marker>
+    
+    <!-- Камера -->
     <a-entity camera></a-entity>
+    
+    <!-- Освещение -->
+    <a-entity light="type: ambient; color: #BBB"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
   </a-scene>
+  
+  <!-- Дополнительный дебаг -->
+  <script>
+    const scene = document.querySelector('a-scene');
+    const marker = document.querySelector('a-marker');
+    
+    scene.addEventListener('loaded', () => {
+      console.log('AR сцена загружена');
+      
+      marker.addEventListener('markerFound', () => {
+        console.log('Маркер найден!');
+        document.body.style.backgroundColor = '#00FF00';
+      });
+      
+      marker.addEventListener('markerLost', () => {
+        console.log('Маркер потерян');
+        document.body.style.backgroundColor = '#000000';
+      });
+    });
+  </script>
 </body>
 </html>
